@@ -18,7 +18,7 @@ export function SiteFooter() {
             bquantz@meritnetsolutions.com
           </a>
           <span aria-hidden>·</span>
-          <span>© {year} Merit Systems, LLC</span>
+          <span>© {year} Merit Systems, LLC. All rights reserved.</span>
         </div>
       </div>
     </footer>

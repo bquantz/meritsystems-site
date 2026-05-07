@@ -86,12 +86,26 @@ top of `expertise.tsx`. Founder bio is in `about.tsx`.
    flattening for the apex).
 5. SWA auto-issues a managed TLS certificate once DNS validates.
 
+## Analytics
+
+The site is wired for [Fathom Analytics](https://usefathom.com) via the
+`NEXT_PUBLIC_FATHOM_SITE_ID` env var. The script only loads when the var
+is set; with it unset, no analytics traffic leaves the site.
+
+To enable in production:
+
+1. Sign up at https://usefathom.com and add `meritsystems.cloud` as a site.
+2. Copy the **Site ID** (an 8-character code like `ABCDEFGH`).
+3. In GitHub: **Settings → Secrets and variables → Actions → Variables tab**.
+   Add a new repository variable named `NEXT_PUBLIC_FATHOM_SITE_ID` with the
+   Site ID as the value. (Variable, not secret — Fathom IDs are public.)
+4. Trigger a deploy (push any change, or re-run the latest workflow).
+
+Locally, copy `.env.example` to `.env.local` and set the same variable to
+test analytics during `npm run dev`.
+
 ## Before launch
 
-- Replace `icon.svg` with a final brand mark
-- Generate an Open Graph card (1200×630) at `src/app/opengraph-image.png`
-- Confirm exact LLC wording for the footer
-- Decide on analytics (Plausible / Fathom)
 - Capture Lighthouse scores on first deploy
 
 The `/blog` route is intentionally hidden from navigation and `noindex`'d. It
