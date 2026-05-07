@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Merit Systems — meritsystems.cloud
 
-## Getting Started
+Public website for Merit Systems. Static site, Next.js App Router, deployed to Azure Static Web Apps.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16 (App Router) with `output: 'export'`
+- React 19
+- Tailwind CSS v4
+- `next-themes` for dark/light toggle (dark default)
+- `framer-motion`, `lucide-react`, `clsx`, `tailwind-merge`
+
+## Local development
+
+```powershell
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm run build    # static export → ./out
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The `out/` directory is the deployable artifact.
 
-## Learn More
+## Project layout
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    layout.tsx          # root layout, fonts, ThemeProvider, metadata
+    page.tsx            # home page (composes section components)
+    globals.css         # Tailwind import + theme tokens
+    icon.svg            # favicon (Next.js icon convention)
+    robots.ts           # generates /robots.txt
+    sitemap.ts          # generates /sitemap.xml
+    blog/
+      page.tsx          # /blog stub (noindex, no nav link)
+  components/
+    site-header.tsx
+    site-footer.tsx
+    theme-provider.tsx
+    theme-toggle.tsx
+    wordmark.tsx
+    architecture-diagram.tsx
+    sections/
+      hero.tsx
+      capabilities.tsx
+      expertise.tsx
+      about.tsx
+      contact.tsx
+  lib/
+    utils.ts            # `cn()` helper
+public/                 # static assets (currently empty)
+staticwebapp.config.json
+next.config.ts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Editing content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All copy lives inside `src/components/sections/*.tsx`. Capability cards are an
+array at the top of `capabilities.tsx`; the expertise table is an array at the
+top of `expertise.tsx`. Founder bio is in `about.tsx`.
 
-## Deploy on Vercel
+## Deploying to Azure Static Web Apps
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push the repo to GitHub.
+2. Create the SWA via CLI (free tier) — adjust `<owner>/<repo>`:
+   ```powershell
+   az staticwebapp create `
+     --name meritsystems-web `
+     --resource-group rg-meritsystems-web `
+     --source https://github.com/<owner>/<repo> `
+     --location eastus2 `
+     --branch main `
+     --app-location "/" `
+     --output-location "out" `
+     --login-with-github
+   ```
+3. SWA injects a GitHub Actions workflow on first link. The workflow runs
+   `npm run build` and uploads `./out`.
+4. In the SWA portal, add the custom domain `meritsystems.cloud`. Add the
+   DNS records SWA prompts for (CNAME for `www`, ALIAS/ANAME or Cloudflare
+   flattening for the apex).
+5. SWA auto-issues a managed TLS certificate once DNS validates.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Before launch
+
+- Replace `icon.svg` with a final brand mark
+- Generate an Open Graph card (1200×630) at `src/app/opengraph-image.png`
+- Confirm exact LLC wording for the footer
+- Decide on analytics (Plausible / Fathom)
+- Capture Lighthouse scores on first deploy
+
+The `/blog` route is intentionally hidden from navigation and `noindex`'d. It
+is reserved for AI infrastructure / VCF / platform writing once that content
+exists.
