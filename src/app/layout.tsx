@@ -50,11 +50,16 @@ export const metadata: Metadata = {
     description:
       "Infrastructure, AI platforms, and cloud architecture for modern enterprises.",
   },
+  alternates: {
+    canonical: "/",
+  },
   robots: {
     index: true,
     follow: true,
   },
 };
+
+const wwwToApexRedirect = `(function(){if(typeof window!=='undefined'&&window.location.hostname==='www.meritsystems.cloud'){window.location.replace('https://meritsystems.cloud'+window.location.pathname+window.location.search+window.location.hash);}})();`;
 
 export const viewport: Viewport = {
   themeColor: [
@@ -72,6 +77,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable}`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: wwwToApexRedirect }} />
+      </head>
       <body className="min-h-screen flex flex-col antialiased">
         <ThemeProvider
           attribute="class"

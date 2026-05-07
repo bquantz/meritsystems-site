@@ -4,6 +4,9 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Insights",
   description: "Writing on AI infrastructure, VCF, hybrid cloud, and platform design.",
+  alternates: {
+    canonical: "/blog",
+  },
   robots: {
     index: false,
     follow: false,
