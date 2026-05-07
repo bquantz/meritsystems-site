@@ -16,17 +16,11 @@
     },
     {
       "route": "/opengraph-image",
-      "headers": {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=86400"
-      }
+      "rewrite": "/opengraph-image.png"
     },
     {
       "route": "/twitter-image",
-      "headers": {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=86400"
-      }
+      "rewrite": "/twitter-image.png"
     },
     {
       "route": "/*.{js,css,woff,woff2,svg,png,jpg,jpeg,webp,avif,gif,ico}",
